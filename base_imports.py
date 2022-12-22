@@ -15,6 +15,7 @@ import pandas as pd
 import seaborn as sns
 
 import scipy.stats as stats
+import plotly.express as px
 import matplotlib.pyplot as plt
 
 from bs4 import BeautifulSoup
