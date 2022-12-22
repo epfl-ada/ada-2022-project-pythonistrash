@@ -22,8 +22,10 @@ from collections import Counter
 from functools import cmp_to_key
 
 from nltk.sentiment import SentimentIntensityAnalyzer
-import patsy.builtins as pat
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import TruncatedSVD
 
+import patsy.builtins as pat
 import xml.etree.ElementTree as ET
 import statsmodels.formula.api as smf
 
