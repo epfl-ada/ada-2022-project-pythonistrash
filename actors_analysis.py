@@ -37,6 +37,24 @@ def is_actor(professions):
     return str(professions) == "actor" or str(professions) == "actress"
 
 
+def get_max(titles, name_revenue_df):
+    titles = titles.split(',')
+    max_ = 0.0
+    for title in titles:
+        if "*" in title or "+" in title or "?" in title: continue
+        print(title)
+        #if name_revenue_df['primaryTitle'].str.contains(title).any() :
+        revenue = name_revenue_df.loc[name_revenue_df['primaryTitle'] == title]['Movie box office revenue']
+
+        print(len(revenue))
+        if revenue.empty: continue
+        if len(revenue) > 1: revenue = max(revenue)
+        if int(revenue) > int(max_):
+            max_ = int(revenue)
+
+    return max_
+
+
 def get_metadata_df_from_genre(genre, metadata, do_filter=False, filter_on_revenue=True, n_filter=1000):
     # Returns dataframe of movies' metadata for films assigned to the given genre
     df = metadata[metadata["genre: " + genre] == 1][['Wikipedia movie ID', 'primaryTitle', 'originalTitle',
