@@ -15,6 +15,8 @@ import pandas as pd
 import seaborn as sns
 
 import scipy.stats as stats
+import kaleido
+import plotly.express as px
 import matplotlib.pyplot as plt
 
 from bs4 import BeautifulSoup
@@ -24,6 +26,7 @@ from functools import cmp_to_key
 from nltk.sentiment import SentimentIntensityAnalyzer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.decomposition import TruncatedSVD
+from plotly.graph_objs import Figure
 
 import patsy.builtins as pat
 import xml.etree.ElementTree as ET

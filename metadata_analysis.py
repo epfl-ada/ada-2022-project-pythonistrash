@@ -1,5 +1,3 @@
-import pandas as pd
-
 from base_imports import *
 
 
@@ -15,7 +13,7 @@ def extract_release_year(df):
     return df
 
 
-def plot_by_year(df: pd.Series | pd.DataFrame, prefix: str, metric: str, col: str, log_yscale=True):
+def plot_by_year(df, prefix: str, metric: str, col: str, log_yscale=True):
     """
     Plot a year grouped column
     :param df: said column
@@ -143,7 +141,6 @@ def append_indicator_columns(df: pd.DataFrame, all_values: set, column_name: str
     return pd.concat(cols, axis=1)
 
 
-
 def retrieve_n_most_frequent(df: pd.DataFrame, n: int, all_vals: list[str], prefix: str) -> list:
     """
     Retrieve the n most frequent genres, languages or countries, sorted in descending order
@@ -154,11 +151,14 @@ def retrieve_n_most_frequent(df: pd.DataFrame, n: int, all_vals: list[str], pref
     :param prefix: str
     :return: said list
     """
+
     def comparator(val1, val2):
         mean_val1 = df[name_appended_column(prefix, val1)].mean()
         mean_val2 = df[name_appended_column(prefix, val2)].mean()
         return mean_val1 - mean_val2
+
     return sorted(all_vals, key=cmp_to_key(comparator), reverse=True)[:n]
+
 
 def retrieve_frequent(df: pd.DataFrame, all_vals: list, prefix: str, freq_threshold=0.05) -> list:
     """
@@ -175,6 +175,7 @@ def retrieve_frequent(df: pd.DataFrame, all_vals: list, prefix: str, freq_thresh
             all_vals
         )
     )
+
 
 def map_to_col_names(data_names: list, prefix: str) -> list:
     """
@@ -209,7 +210,8 @@ def find_correlated_metadata(df: pd.DataFrame, freq_data: list, success_metric: 
     return correlated_data
 
 
-def plot_metadata_frequency_against_metric(df: pd.DataFrame, prefix: str,  titled_data: list, success_metric: str, title: str, log_scale=True):
+def plot_metadata_frequency_against_metric(df: pd.DataFrame, prefix: str, titled_data: list, success_metric: str,
+                                           title: str, log_scale=True):
     """
     Generating a grid of histograms
     :param df: data
@@ -228,9 +230,9 @@ def plot_metadata_frequency_against_metric(df: pd.DataFrame, prefix: str,  title
     tested_data = map_to_col_names(titled_data, prefix)[:smallest_big_enough_square]
     size = int(np.sqrt(smallest_big_enough_square))
 
-    fig, ax = plt.subplots(size, size, figsize=(11, 11), sharex = True)
+    fig, ax = plt.subplots(size, size, figsize=(11, 11), sharex=True)
     for i in range(smallest_big_enough_square):
-        sbplt = ax[i%size, math.floor(i/size)]
+        sbplt = ax[i % size, math.floor(i / size)]
         sns.histplot(ax=sbplt, data=df[df[tested_data[i]] == 1][success_metric], log_scale=log_scale)
         sbplt.set_title(titled_data[i])
 
@@ -238,9 +240,63 @@ def plot_metadata_frequency_against_metric(df: pd.DataFrame, prefix: str,  title
     fig.tight_layout()
 
 
-def formula_rhs_string(prefix, list_all_vars):
-    return " + ".join(list(map(lambda x: f'C(pat.Q("{name_appended_column(prefix, x)}"))', list_all_vars)))
+def mapmaker(df: pd.DataFrame, target_col: str, title:str, color_continuous_scale="Greens", width=800, height=500) -> Figure:
+    """
+    Create map representation of a feature.
+    :param df: data
+    :param target_col: feature to represent as colors
+    :param title: str, plot title
+    :param color_continuous_scale: color palette
+    :param width: int
+    :param height: int
+    :return: Map as a Figure plotly object
+    """
+    cntries_map = px.choropleth(
+        title=title,
+        data_frame=df,
+        locationmode="country names",
+        locations=df.index,
+        color=target_col,
+        color_continuous_scale=color_continuous_scale,
+        range_color=(df[target_col].quantile(0.1), df[target_col].quantile(0.9))
+    )
+    # cntries_map.update_layout(width=width, height=height)
+    return cntries_map
 
-def linear_reg(success_metric, prefix_var, list_vars):
-    return smf.ols(formula=success_metric + ' ~ ' + formula_rhs_string(prefix_var, list_vars), data=metadata_df).fit()
 
+def savemap(fig: Figure, path: str) -> None:
+    """
+    Save given map to memory
+    :param fig: map as Figure plotly object
+    :param path: str
+    """
+    with open(path, "w") as f:
+        f.write(fig.to_html())
+
+
+def linear_reg(df, success_metric, prefix_var, list_vars):
+    """
+    Perform linear regression over the given list of features and response variable.
+    :param df: data
+    :param success_metric: response variable
+    :param prefix_var: str
+    :param list_vars: str
+    :return:
+    """
+    def formula_rhs_string(prefix, list_all_vars):
+        return " + ".join(list(map(lambda x: f'C(pat.Q("{name_appended_column(prefix, x)}"))', list_all_vars)))
+
+    return smf.ols(formula=success_metric + ' ~ ' + formula_rhs_string(prefix_var, list_vars), data=df).fit()
+
+
+def add_mean_to_series(ser: pd.Series, idx_name="Mean") -> pd.Series:
+    """
+    Find the mean val in a series and add it to all other values
+    :param ser: Series
+    :param idx_name: label of mean
+    :return: new series with mean summed to all other values then dropped
+    """
+    val = ser[ser.index == idx_name].values[0]
+    ser = ser + val
+    ser = ser.drop(idx_name)
+    return ser
