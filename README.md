@@ -52,9 +52,9 @@ Later, we will examine how combinations of these three features influence rating
 
 **2. How do actors and their interactions contribute in their movie's success?** 
 
-Thanks to IMDb actors and casting databases, we can gather the castings of films and create a graph representing interactions between actors. Nodes represent actors and edges "has worked with"-relationships. Edges can also be weighted in terms of the number of collaborations between two people. Additionally, we will investigate if there exist clusters in the graph by applying k-means and spectral clustering methods.
+Thanks to IMDb actors and casting databases, we can gather the castings of films and create a graph representing interactions between actors. Nodes represent actors and edges "has worked with"-relationships. Edges can also be weighted in terms of the number of collaborations between two people. Additionally, we will investigate if there exist clusters in the graph by applying k-means, spectral clustering methods or the Louvain algorithm.
 
-With this information, we will study how revenue and rating success depend on both individual and group participation of actors. We will train an ML model with input data generated from previous information and its interactions. Those models can be linear regression, for to obtain direct insights from feature weights, or more performant techniques such as Decision Trees combined with AI explainability tools (LIME and SHAP).
+With this information, we will study how revenue and rating success depend on both individual and group participation of actors.
 
 **3. What characterizes a successful and an unsuccessful movie plot?**
 
