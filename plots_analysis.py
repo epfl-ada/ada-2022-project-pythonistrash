@@ -60,6 +60,15 @@ def find_more_or_less_successful_wrt(df, metric, values, value_prefix, q_low=0.1
 
     return values_dfs
 
+
+def get_successful(x):
+    return x[1]
+
+
+def get_unsuccessful(x):
+    return x[0]
+
+
 def get_term_topic_matrix(df: pd.DataFrame, nbr_topics=5, lemmas_col='important_lemmas') -> tuple[pd.DataFrame, list[float]]:
     """
     Compute LSA of given data: SVD (tfidf(data) = USV^T) then return V^T and S
@@ -91,8 +100,10 @@ def top_m_words_nth_topic(term_topic_matrix: pd.DataFrame, nth_topic: int, suffi
     :param plot: bool, plots importance of top m words or not
     :return: Series containing the m words and their importance
     """
-    top_m_terms = term_topic_matrix[f'topic {nth_topic}'].sort_values(ascending=False)[:m_words]
+    top_m_terms = term_topic_matrix[f'topic {nth_topic}'].sort_values(ascending=False)[:m_words+1]
+    top_m_terms.drop("be", inplace=True)
+    top_m_terms = top_m_terms[:m_words]
     if plot:
         plt.title(f'Top {m_words} terms in topic {nth_topic} for movies of {suffix}')
-        sns.barplot(x= top_m_terms.values, y=top_m_terms.index)
+        sns.barplot(x=top_m_terms.values, y=top_m_terms.index)
     return top_m_terms
