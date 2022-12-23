@@ -243,17 +243,19 @@ def plot_metadata_frequency_against_metric(df: pd.DataFrame, prefix: str, titled
     fig.tight_layout()
 
 
-def mapmaker(df: pd.DataFrame, target_col: str, color_continuous_scale="Greens", width=800, height=500) -> Figure:
+def mapmaker(df: pd.DataFrame, target_col: str, title:str, color_continuous_scale="Greens", width=800, height=500) -> Figure:
     """
     Create map representation of a feature.
     :param df: data
     :param target_col: feature to represent as colors
+    :param title: str, plot title
     :param color_continuous_scale: color palette
     :param width: int
     :param height: int
     :return: Map as a Figure plotly object
     """
     cntries_map = px.choropleth(
+        title=title,
         data_frame=df,
         locationmode="country names",
         locations=df.index,
@@ -261,7 +263,7 @@ def mapmaker(df: pd.DataFrame, target_col: str, color_continuous_scale="Greens",
         color_continuous_scale=color_continuous_scale,
         range_color=(df[target_col].quantile(0.1), df[target_col].quantile(0.9))
     )
-    cntries_map.update_layout(width=width, height=height)
+    # cntries_map.update_layout(width=width, height=height)
     return cntries_map
 
 
