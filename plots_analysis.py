@@ -149,6 +149,6 @@ def savepie(fig: Figure, genre: str, metric: str, successful: int, idx_topic: in
     :param idx_topic: int
     """
     successfulness_string = 'succ' if successful == 1 else 'fail'
-    with open(f"outputs/plot_analysis/{genre[:4]}_{metric}_{successfulness_string}_topic_{idx_topic + 1}.svg",
-              "wb") as f:
-        f.write(fig.to_image(format="svg"))
+    with open(f"outputs/plot_analysis/{genre[:4]}_{metric}_{successfulness_string}_topic_{idx_topic + 1}.html",
+              "w") as f:
+        f.write(fig.to_html())
