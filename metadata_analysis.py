@@ -276,8 +276,28 @@ def savemap(fig: Figure, path: str) -> None:
 
 
 def linear_reg(df, success_metric, prefix_var, list_vars):
-
+    """
+    Perform linear regression over the given list of features and response variable.
+    :param df: data
+    :param success_metric: response variable
+    :param prefix_var: str
+    :param list_vars: str
+    :return:
+    """
     def formula_rhs_string(prefix, list_all_vars):
         return " + ".join(list(map(lambda x: f'C(pat.Q("{name_appended_column(prefix, x)}"))', list_all_vars)))
 
     return smf.ols(formula=success_metric + ' ~ ' + formula_rhs_string(prefix_var, list_vars), data=df).fit()
+
+
+def add_mean_to_series(ser: pd.Series, idx_name="Mean") -> pd.Series:
+    """
+    Find the mean val in a series and add it to all other values
+    :param ser: Series
+    :param idx_name: label of mean
+    :return: new series with mean summed to all other values then dropped
+    """
+    val = ser[ser.index == idx_name].values[0]
+    ser = ser + val
+    ser = ser.drop(idx_name)
+    return ser
