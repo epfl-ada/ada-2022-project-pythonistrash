@@ -15,7 +15,7 @@ import pandas as pd
 import seaborn as sns
 
 import scipy.stats as stats
-import kaleido
+#import kaleido
 import plotly.express as px
 import matplotlib.pyplot as plt
 
