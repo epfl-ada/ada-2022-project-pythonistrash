@@ -1,7 +1,4 @@
 from base_imports import *
-from plotly.graph_objs import Figure
-
-import plotly.express as px
 
 
 def extract_release_year(df):

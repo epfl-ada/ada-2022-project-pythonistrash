@@ -114,11 +114,12 @@ def top_m_words_nth_topic(term_topic_matrix: pd.DataFrame, nth_topic: int, suffi
     return top_m_terms
 
 
-def topic_piemaker(importance_ser: pd.Series, title: str) -> Figure:
+def topic_piemaker(importance_ser: pd.Series, title: str, colors=px.colors.sequential.Greens_r) -> Figure:
     """
     Create pie of words for a topic
     :param importance_ser: importance series corresponding to words
     :param title: pie title
+    :param colors: color palette
     :return: Figure object, to be converted to html
     """
     temp_df = pd.DataFrame(data={"Importance": importance_ser})
@@ -129,7 +130,7 @@ def topic_piemaker(importance_ser: pd.Series, title: str) -> Figure:
                  names="Word",
                  values="Importance",
                  color="Importance",
-                 color_discrete_sequence=px.colors.sequential.Greens_r,
+                 color_discrete_sequence=colors,
                  hole=0.3,
                  labels="Word"
                  )
@@ -148,6 +149,6 @@ def savepie(fig: Figure, genre: str, metric: str, successful: int, idx_topic: in
     :param idx_topic: int
     """
     successfulness_string = 'succ' if successful == 1 else 'fail'
-    with open(f"outputs/plot_analysis/{genre[:4]}_{metric}_{successfulness_string}_topic_{idx_topic + 1}.html",
-              "w") as f:
-        f.write(fig.to_html())
+    with open(f"outputs/plot_analysis/{genre[:4]}_{metric}_{successfulness_string}_topic_{idx_topic + 1}.svg",
+              "wb") as f:
+        f.write(fig.to_image(format="svg"))
