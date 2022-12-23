@@ -1,4 +1,4 @@
-# ADA Milestone 2 README
+# ADA Milestone 3 README
 
 ## Cracking the Hollywood interview :clapper:
 
