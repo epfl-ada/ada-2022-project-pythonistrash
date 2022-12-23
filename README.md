@@ -2,6 +2,8 @@
 
 ## Cracking the Hollywood interview :clapper:
 
+**Link to the datastory: [click here: https://dicedead.github.io/cracking-the-hollywood-interview/](https://dicedead.github.io/cracking-the-hollywood-interview/).**
+
 ### Abstract :bulb:
 
 On average, the production of a major box office movie costs $65 million, without counting the marketing and distribution fees [^1]. Unlike house construction, which usually ends up exactly like the pre-sketched plan, making a movie is unpredictable and anticipating the audience’s opinion is nearly impossible despite the effort and money spent.
